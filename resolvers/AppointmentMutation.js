@@ -1,7 +1,7 @@
 const Appointment = require('../models/Appointment');
 
 const appointmentMutation = {
-    createAppointment: async ({
+    addAppointment: async (_, {
                                   appointmentId, time, status, notes, serviceId,
                                   employeeId, customerId, locationId
                               }) => {
@@ -13,7 +13,7 @@ const appointmentMutation = {
         return appointment;
     },
 
-    updateAppointment: async ({
+    updateAppointment: async (_, {
                                   appointmentId, time, status, notes, serviceId,
                                   employeeId, customerId, locationId
                               }) => {
@@ -32,7 +32,7 @@ const appointmentMutation = {
         throw new Error('Appointment not found');
     },
 
-    deleteAppointment: async ({appointmentId}) => {
+    deleteAppointment: async (_, {appointmentId}) => {
         const appointment = await Appointment.findOne({appointmentId});
         if (appointment) {
             await Appointment.deleteOne({appointmentId});
