@@ -2,20 +2,28 @@ const Appointment = require('../models/Appointment');
 
 const appointmentMutation = {
     addAppointment: async (_, {
-                                  appointmentId, time, status, notes, serviceId,
-                                  employeeId, customerId, locationId
+                                    time, status, notes, serviceId,
+                                    employeeId, customerId, locationId
                               }) => {
+        const count = await Appointment.countDocuments();
+        const appointmentId = count + 1;
         const appointment = new Appointment({
-            appointmentId, time, status, notes, serviceId,
-            employeeId, customerId, locationId
+            appointmentId,
+            time,
+            status,
+            notes,
+            serviceId,
+            employeeId,
+            customerId,
+            locationId
         });
         await appointment.save();
         return appointment;
     },
 
     updateAppointment: async (_, {
-                                  appointmentId, time, status, notes, serviceId,
-                                  employeeId, customerId, locationId
+                                    time, status, notes, serviceId,
+                                    employeeId, customerId, locationId
                               }) => {
         const appointment = await Appointment.findOne({appointmentId});
         if (appointment) {

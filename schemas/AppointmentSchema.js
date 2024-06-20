@@ -18,13 +18,28 @@ const typeDefs = gql`
     }
 
     type Mutation {
-        addAppointment(appointmentId: Int!, time: String!, status: String!, 
-                       notes: String, serviceId: String, employeeId: String!, 
-                       customerId: String!, locationId: String!): Appointment
-        updateAppointment(appointmentId: Int!, time: String!, status: String!,
-                          notes: String, serviceId: String, employeeId: String!, 
-                          customerId: String!, locationId: String!): Appointment
-        deleteAppointment(appointmentId: Int!): Appointment
+        addAppointment(
+                time: String! 
+                status: String! 
+                notes: String
+                serviceId: String
+                employeeId: String!
+                customerId: String!
+                locationId: String!
+        ): Appointment
+        updateAppointment(
+                appointmentId: Int!
+                time: String!
+                status: String!
+                notes: String
+                serviceId: String
+                employeeId: String!
+                customerId: String!
+                locationId: String!
+        ): Appointment
+        deleteAppointment(
+                appointmentId: Int!
+        ): Appointment
     }            
 `;
 
