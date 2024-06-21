@@ -1,6 +1,6 @@
 const {gql} = require('apollo-server-express');
 
-const typeDefs = gql`
+const appointmentTypeDef = gql`
     type Appointment {
         appointmentId: Int!
         time: String!
@@ -43,4 +43,4 @@ const typeDefs = gql`
     }            
 `;
 
-module.exports = typeDefs;
+module.exports = appointmentTypeDef;

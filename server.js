@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
-const typeDefs = require('./schemas/AppointmentSchema')
+const typeDefs = require('./schemas')
 const app = express();
 const path = require('path');
 const cors = require('cors');
