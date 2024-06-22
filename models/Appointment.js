@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 
 const appointmentSchema = new Schema({
-    appointmentId: {
+    id: {
         type: Number,
         required: true,
         unique: true

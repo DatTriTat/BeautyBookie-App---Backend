@@ -1,11 +1,10 @@
 const appointmentQuery = require('./AppointmentQuery');
 const appointmentMutation = require('./AppointmentMutation');
-const serviceQuery = require('./serviceQuery');
+const serviceQuery = require('./ServiceQuery');
 const serviceMutation = require('./ServiceMutation');
+const { mergeResolvers } = require('@graphql-tools/merge');
 
-const resolvers = {
-    Query: appointmentQuery, serviceQuery,
-    Mutation: appointmentMutation, serviceMutation
-};
+const resolvers = mergeResolvers([appointmentQuery, appointmentMutation, serviceQuery
+, serviceMutation]);
 
 module.exports = resolvers;

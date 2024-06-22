@@ -13,7 +13,7 @@ const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
 const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
-const resolvers = require("./resolvers/index");
+const resolvers = require("./resolvers");
 mongoose.set('strictQuery', true); // or false, depending on your preference
 
 const PORT = process.env.PORT || 3500;
