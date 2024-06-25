@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const { ApolloServer } = require('apollo-server-express');
+const typeDefs = require('./schemas')
 const app = express();
 const path = require('path');
 const cors = require('cors');
@@ -11,6 +13,7 @@ const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
 const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
+const resolvers = require("./resolvers");
 mongoose.set('strictQuery', true); // or false, depending on your preference
 
 const PORT = process.env.PORT || 3500;
@@ -48,20 +51,28 @@ app.use('/refresh', require('./routes/refresh'));
 app.use('/logout', require('./routes/logout'));
 
 
-app.all('*', (req, res) => {
-    res.status(404);
-    if (req.accepts('html')) {
-        res.sendFile(path.join(__dirname, 'views', '404.html'));
-    } else if (req.accepts('json')) {
-        res.json({ "error": "404 Not Found" });
-    } else {
-        res.type('txt').send("404 Not Found");
-    }
-});
+// app.all('*', (req, res) => {
+//     res.status(404);
+//     if (req.accepts('html')) {
+//         res.sendFile(path.join(__dirname, 'views', '404.html'));
+//     } else if (req.accepts('json')) {
+//         res.json({ "error": "404 Not Found" });
+//     } else {
+//         res.type('txt').send("404 Not Found");
+//     }
+// });
 
 app.use(errorHandler);
 
 mongoose.connection.once('open', () => {
     console.log('Connected to MongoDB');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });
+
+// Set up Apollo Server
+const server = new ApolloServer({typeDefs, resolvers});
+server.start().then( () => {
+        server.applyMiddleware({app});
+
+        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    }
+);

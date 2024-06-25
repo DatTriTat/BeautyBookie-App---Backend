@@ -54,3 +54,5 @@
 20220519	18:38:59	8047e7ef-681a-49aa-a5a3-587ab30ce4ff	TokenExpiredError: jwt expired
 20220519	18:38:59	40a35881-b0ee-44fd-9199-e927927ec4c5	TokenExpiredError: jwt expired
 20220519	18:38:59	636d1a8f-5c51-49e3-8ab9-bbd6addeb8fe	TokenExpiredError: jwt expired
+20240618	12:44:24	a1652693-1964-41bc-b0e5-39493a2691da	SyntaxError: Unexpected token 'q', "query {
+ "... is not valid JSON
