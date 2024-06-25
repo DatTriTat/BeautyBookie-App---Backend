@@ -2,7 +2,7 @@ const {gql} = require('apollo-server-express');
 
 const appointmentTypeDef = gql`
     type Appointment {
-        appointmentId: Int!
+        _id: String!
         time: String!
         status: String!
         notes: String
@@ -13,7 +13,7 @@ const appointmentTypeDef = gql`
     }
 
     type Query {
-        getAppointment(appointmentId: Int!): Appointment
+        getAppointment(_id: String!): Appointment
         getAppointments: [Appointment]
     }
 
@@ -28,7 +28,7 @@ const appointmentTypeDef = gql`
                 locationId: String!
         ): Appointment
         updateAppointment(
-                appointmentId: Int!
+                _id: String!
                 time: String!
                 status: String!
                 notes: String
@@ -38,8 +38,8 @@ const appointmentTypeDef = gql`
                 locationId: String!
         ): Appointment
         deleteAppointment(
-                appointmentId: Int!
-        ): Appointment
+                _id: String!
+        ): String
     }            
 `;
 

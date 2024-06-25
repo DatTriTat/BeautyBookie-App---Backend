@@ -5,10 +5,7 @@ const serviceMutation = {
         addService: async (_, {
             name, serviceType, price, duration, date
         }) => {
-            const maxService = await Service.findOne().sort('-serviceId').exec();
-            const serviceId = maxService ? maxService.serviceId + 1 : 1;
             const service = new Service({
-                serviceId,
                 name,
                 serviceType,
                 price,
@@ -20,9 +17,9 @@ const serviceMutation = {
         },
 
         updateService: async (_, {
-            id, name, serviceType, price, duration, date
+            _id, name, serviceType, price, duration, date
         }) => {
-            const service = await Service.findOne({id});
+            const service = await Service.findOne({_id});
             if (service) {
                 if (name !== undefined) service.name = name;
                 if (serviceType !== undefined) service.serviceType = serviceType;
@@ -35,10 +32,10 @@ const serviceMutation = {
             }
             throw new Error('Service not found');
         },
-        deleteService: async (_, {id}) => {
-            const service = Service.findOne({id});
+        deleteService: async (_, {_id}) => {
+            const service = Service.findOne({_id});
             if (service) {
-                await Service.deleteOne({id});
+                await Service.deleteOne({_id});
                 return 'Service deleted';
             }
             throw new Error('Service not found');

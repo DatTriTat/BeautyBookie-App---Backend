@@ -6,10 +6,7 @@ const appointmentMutation = {
             time, status, notes, serviceId,
             employeeId, customerId, locationId
         }) => {
-            const maxAppointment = await Appointment.findOne().sort('-id').exec();
-            const id = maxAppointment ? maxAppointment.id + 1 : 1;
             const appointment = new Appointment({
-                id,
                 time,
                 status,
                 notes,
@@ -22,11 +19,11 @@ const appointmentMutation = {
             return appointment;
         },
 
-        updateAppointment: async (_, {
+        updateAppointment: async (_, { _id,
             time, status, notes, serviceId,
             employeeId, customerId, locationId
         }) => {
-            const appointment = await Appointment.findOne({id});
+            const appointment = await Appointment.findOne({_id});
             if (appointment) {
                 if (time !== undefined) appointment.time = time;
                 if (status !== undefined) appointment.status = status;
@@ -41,10 +38,10 @@ const appointmentMutation = {
             throw new Error('Appointment not found');
         },
 
-        deleteAppointment: async (_, {id}) => {
-            const appointment = await Appointment.findOne({id});
+        deleteAppointment: async (_, {_id}) => {
+            const appointment = await Appointment.findOne({_id});
             if (appointment) {
-                await Appointment.deleteOne({id});
+                await Appointment.deleteOne({_id});
                 return 'Appointment deleted';
             }
             throw new Error('Appointment not found')

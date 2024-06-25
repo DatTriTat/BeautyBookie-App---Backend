@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
 const Schema = mongoose.Schema;
 
 
 const appointmentSchema = new Schema({
-    id: {
-        type: Number,
-        required: true,
-        unique: true
+    _id: {
+        type: String,
+        default: uuidv4
     },
     time: {
         type: Date,

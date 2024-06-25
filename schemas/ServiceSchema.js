@@ -2,7 +2,7 @@ const {gql} = require('apollo-server-express');
 
 const serviceTypeDef = gql`
     type Service {
-        serviceId: Int!
+        _id: String!
         name: String!
         serviceType: String!
         price: Float!
@@ -11,7 +11,7 @@ const serviceTypeDef = gql`
     }
     
     type Query {
-        getService(id: Int!): Service
+        getService(_id: String!): Service
         getServices: [Service]
     }
     
@@ -24,7 +24,7 @@ const serviceTypeDef = gql`
             date: String!
         ): Service
         updateService(
-            id: Int!
+            _id: String!
             name: String!
             serviceType: String!
             price: Float!
@@ -32,8 +32,8 @@ const serviceTypeDef = gql`
             date: String!
         ): Service
         deleteService(
-            id: Int!
-        ): Service
+            _id: String!
+        ): String
     }
 `;
 
