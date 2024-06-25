@@ -6,6 +6,28 @@ const appointmentMutation = {
             time, status, notes, serviceId,
             employeeId, customerId, locationId
         }) => {
+            const newAppointmentDate = new Date(time);
+
+            // Find all appointments for the same customer on the same date
+            const startOfDay = new Date(newAppointmentDate);
+            startOfDay.setHours(0,0,0,0);
+
+            const endOfDay = new Date(newAppointmentDate);
+            endOfDay.setHours(23,59,59,999);
+
+            const existingAppointments = await Appointment.find({
+                customerId: customerId,
+                time: { $gte: startOfDay, $lte: endOfDay }
+            });
+
+            // Check of there is any existing appointment that should be canceled
+            for ( const existingAppointment of existingAppointments ) {
+                if (newAppointmentDate > new Date(existingAppointment.time)) {
+                    existingAppointment.status = "cancelled";
+                    await existingAppointment.save();
+                }
+            }
+
             const appointment = new Appointment({
                 time,
                 status,
