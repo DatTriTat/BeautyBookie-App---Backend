@@ -66,7 +66,7 @@ const appointmentMutation = {
                 await Appointment.deleteOne({_id});
                 return 'Appointment deleted';
             }
-            throw new Error('Appointment not found')
+            throw new Error('Appointment not found');
         }
     }
 
