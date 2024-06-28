@@ -24,7 +24,9 @@ const appointmentTypeDef = gql`
                 notes: String
                 serviceId: String
                 employeeId: String!
-                customerId: String!
+                phoneNumber: String!
+                customerName: String!
+                birthday: String
                 locationId: String!
         ): Appointment
         updateAppointment(

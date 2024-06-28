@@ -1,13 +1,32 @@
 const Appointment = require('../models/Appointment');
-
+const Customer = require('../models/Customer');
 const appointmentMutation = {
     Mutation: {
         addAppointment: async (_, {
             time, status, notes, serviceId,
-            employeeId, customerId, locationId
+            employeeId, phoneNumber, customerName,
+            birthday, locationId
         }) => {
 
             const now = new Date().toISOString();
+            const existingCustomer = await Customer.findOne({phoneNumber});
+            let customerId;
+
+            // Check if the customer exists
+            if (!existingCustomer) {
+                const customer = new Customer({
+                    phoneNumber,
+                    customerName,
+                    birthday,
+                    serviceTimes: 0
+                });
+                await customer.save();
+                customerId = customer._id;
+            } else {
+                customerId = existingCustomer._id;
+            }
+
+            // Check if there are any existing appointments for the customer
             const existingAppointments = await Appointment.find({
                 customerId,
                 time: { $gt: now}
