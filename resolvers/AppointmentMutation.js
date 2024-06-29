@@ -29,12 +29,13 @@ const appointmentMutation = {
             // Check if there are any existing appointments for the customer
             const existingAppointments = await Appointment.find({
                 customerId,
+                status: 'pending',
                 time: { $gt: now}
             });
 
             // Check if there is any existing appointment that should be canceled
             for ( const existingAppointment of existingAppointments ) {
-                existingAppointment.status = "canceled";
+                existingAppointment.status = "cancelled";
                 await existingAppointment.save();
             }
 
@@ -57,13 +58,29 @@ const appointmentMutation = {
         }) => {
             const appointment = await Appointment.findOne({_id});
             if (appointment) {
+
                 if (time !== undefined) appointment.time = time;
-                if (status !== undefined) appointment.status = status;
+
+                if (status !== undefined) {
+                    appointment.status = status;
+
+                    if (status === 'completed') {
+                        const customer = await Customer.findOne({_id: appointment.customerId});
+                        customer.serviceTimes += 1;
+                        await customer.save();
+                    }
+                }
+
                 if (notes !== undefined) appointment.notes = notes;
+
                 if (serviceId !== undefined) appointment.serviceId = serviceId;
+
                 if (employeeId !== undefined) appointment.employeeId = employeeId;
+
                 if (customerId !== undefined) appointment.customerId = customerId;
+
                 if (locationId !== undefined) appointment.locationId = locationId;
+
                 await appointment.save();
                 return appointment;
             }
