@@ -1,31 +1,42 @@
 const Appointment = require('../models/Appointment');
-
+const Customer = require('../models/Customer');
 const appointmentMutation = {
     Mutation: {
         addAppointment: async (_, {
             time, status, notes, serviceId,
-            employeeId, customerId, locationId
+            employeeId, phoneNumber, customerName,
+            birthday, locationId
         }) => {
-            const newAppointmentDate = new Date(time);
 
-            // Find all appointments for the same customer on the same date
-            const startOfDay = new Date(newAppointmentDate);
-            startOfDay.setHours(0,0,0,0);
+            const now = new Date().toISOString();
+            const existingCustomer = await Customer.findOne({phoneNumber});
+            let customerId;
 
-            const endOfDay = new Date(newAppointmentDate);
-            endOfDay.setHours(23,59,59,999);
+            // Check if the customer exists
+            if (!existingCustomer) {
+                const customer = new Customer({
+                    phoneNumber,
+                    customerName,
+                    birthday,
+                    serviceTimes: 0
+                });
+                await customer.save();
+                customerId = customer._id;
+            } else {
+                customerId = existingCustomer._id;
+            }
 
+            // Check if there are any existing appointments for the customer
             const existingAppointments = await Appointment.find({
-                customerId: customerId,
-                time: { $gte: startOfDay, $lte: endOfDay }
+                customerId,
+                status: 'pending',
+                time: { $gt: now}
             });
 
-            // Check of there is any existing appointment that should be canceled
+            // Check if there is any existing appointment that should be canceled
             for ( const existingAppointment of existingAppointments ) {
-                if (newAppointmentDate > new Date(existingAppointment.time)) {
-                    existingAppointment.status = "cancelled";
-                    await existingAppointment.save();
-                }
+                existingAppointment.status = "cancelled";
+                await existingAppointment.save();
             }
 
             const appointment = new Appointment({
@@ -47,13 +58,29 @@ const appointmentMutation = {
         }) => {
             const appointment = await Appointment.findOne({_id});
             if (appointment) {
+
                 if (time !== undefined) appointment.time = time;
-                if (status !== undefined) appointment.status = status;
+
+                if (status !== undefined) {
+                    appointment.status = status;
+
+                    if (status === 'completed') {
+                        const customer = await Customer.findOne({_id: appointment.customerId});
+                        customer.serviceTimes += 1;
+                        await customer.save();
+                    }
+                }
+
                 if (notes !== undefined) appointment.notes = notes;
+
                 if (serviceId !== undefined) appointment.serviceId = serviceId;
+
                 if (employeeId !== undefined) appointment.employeeId = employeeId;
+
                 if (customerId !== undefined) appointment.customerId = customerId;
+
                 if (locationId !== undefined) appointment.locationId = locationId;
+
                 await appointment.save();
                 return appointment;
             }
@@ -66,7 +93,7 @@ const appointmentMutation = {
                 await Appointment.deleteOne({_id});
                 return 'Appointment deleted';
             }
-            throw new Error('Appointment not found')
+            throw new Error('Appointment not found');
         }
     }
 

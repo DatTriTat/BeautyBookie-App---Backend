@@ -24,18 +24,20 @@ const appointmentTypeDef = gql`
                 notes: String
                 serviceId: String
                 employeeId: String!
-                customerId: String!
+                phoneNumber: String!
+                customerName: String!
+                birthday: String
                 locationId: String!
         ): Appointment
         updateAppointment(
                 _id: String!
-                time: String!
-                status: String!
+                time: String
+                status: String
                 notes: String
                 serviceId: String
-                employeeId: String!
-                customerId: String!
-                locationId: String!
+                employeeId: String
+                customerId: String
+                locationId: String
         ): Appointment
         deleteAppointment(
                 _id: String!
